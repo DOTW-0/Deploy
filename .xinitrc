@@ -48,14 +48,26 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
  unset f
 fi
 export LANGUAGE=zh_CN:en_US &
-export GTK_IM_MODULT=fcitx5 
-export QT_IM_MODULE=fcitx 
-export XMODIFIERS="@im=fcitx" 
-fcitx5 &
+export GTK_IM_MODULT=ibus
+export QT_IM_MODULE=ibus
+export XMODIFIERS=@im=ibus
+while xsetroot -name "Battery:$(acpi -b | awk '{print $4}' | cut -d"," -f1)|Volume:$(amixer get Master | awk -F'[][]' 'END{ print $4":"$2  }'    )|$(LC_ALL='C' date +'%F[%b %a] %R')"
+do
+    sleep 1
+done &
+ibus-daemon -drx &
 picom -CGb &
-feh --bg-fill /home/admin/.dwm/wallpaper/-4dc2dc7d03bf59f6.jpg	&
-numlockx &
+export _JAVA_AWT_WM_NONREPARENTING=1
+exec $1
+wmname LG3D
+while habak -ms -hi ~/.config/desktop/wallpaper/
+do
+    sleep 600
+done &
 qv2ray &
 nm-applet &
 xfce4-power-manager &
 exec dwm
+else
+ exec $command
+fi
